@@ -13,9 +13,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Mailer {
-  public static void main(String[] args) throws FileNotFoundException {
-    final String username = "***@xyz.com";
-    final String password = "****";
+  public static void main(String[] args) throws FileNotFoundException, InterruptedException {
+    final String username = "";
+    final String password = "";
 
     String host = "smtp.gmail.com";
 
@@ -31,8 +31,7 @@ public class Mailer {
         }
       });
 
-
-    Contacts.contacts.entrySet().parallelStream().forEach(e -> {
+    Contacts.contacts.entrySet().stream().forEach(e -> {
       String email = e.getValue();
       try {
         sendMessage(email, username, session, e.getKey());
@@ -46,9 +45,8 @@ public class Mailer {
     try {
       Message message = new MimeMessage(session);
       message.setFrom(new InternetAddress(from));
-      message.setRecipients(Message.RecipientType.TO,
-        InternetAddress.parse(to));
-      message.setSubject("Invitation Geek Night NCR Noida Edition | Adding Goodness to your Android Kitty");
+      message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+      message.setSubject("Invitation Geek Night NCR | Platform, language and tools. Its all about iOS");
 
       FileReader reader = new FileReader("./index.html");
       BufferedReader br = new BufferedReader(reader);
@@ -67,23 +65,16 @@ public class Mailer {
       MimeMultipart multipart = new MimeMultipart("related");
 
       BodyPart imageBP1 = new MimeBodyPart();
-      BodyPart imageBP2 = new MimeBodyPart();
 
       DataSource fds1 = new FileDataSource(
-        "./gn.jpg");
-      DataSource fds2 = new FileDataSource(
-        "./gn2.jpg");
-
+        "./geeknight.jpeg");
 
       imageBP1.setDataHandler(new DataHandler(fds1));
-      imageBP2.setDataHandler(new DataHandler(fds2));
 
       imageBP1.setHeader("Content-ID", "<image1>");
-      imageBP2.setHeader("Content-ID", "<image2>");
 
       multipart.addBodyPart(messageBodyPart);
       multipart.addBodyPart(imageBP1);
-      multipart.addBodyPart(imageBP2);
 
       message.setContent(multipart);
 
